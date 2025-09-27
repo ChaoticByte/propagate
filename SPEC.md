@@ -44,7 +44,7 @@ All connections are using unencrypted (TODO) websockets as the underlying networ
 
 ## Packet Structure
 
-> **NOTE**  
+> [!IMPORTANT]  
 > Not yet implemented.
 
 A complete packet is a [MessagePack](https://msgpack.org/)-encoded dictionary with the following fields:
