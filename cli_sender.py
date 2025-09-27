@@ -6,13 +6,16 @@ import asyncio
 
 from argparse import ArgumentParser
 
+from websockets.asyncio.client import ClientConnection
 from websockets.asyncio.client import connect
 
 
 async def run(host: str, port: int):
+    ws: ClientConnection
     async with connect(f"ws://{host}:{port}") as ws:
         while True:
             inp = input("> ")
+            await (await ws.ping()) # check connection
             await ws.send(inp)
 
 
