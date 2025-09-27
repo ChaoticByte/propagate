@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+# Copyright (c) 2025 Julian Müller (ChaoticByte)
+
 import asyncio
 
 from argparse import ArgumentParser
@@ -12,6 +14,7 @@ async def run(host: str, port: int):
         while True:
             inp = input("> ")
             await ws.send(inp)
+
 
 if __name__ == "__main__":
 
