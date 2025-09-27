@@ -3,10 +3,12 @@
 # Copyright (c) 2025 Julian Müller (ChaoticByte)
 
 import asyncio
+import signal
 
 from argparse import ArgumentParser
 from pathlib import Path
 
+from argh.log import log
 from argh.node import node_from_yml
 
 
@@ -18,4 +20,11 @@ if __name__ == "__main__":
 
     node = node_from_yml(args.config.read_text())
 
+    def _sigint(*args):
+        # don't need special sigint behaviour
+        # -> send SIGTERM
+        signal.raise_signal(signal.SIGTERM)
+    signal.signal(signal.SIGINT, _sigint)
+
     asyncio.run(node.run())
+    log("Bye")

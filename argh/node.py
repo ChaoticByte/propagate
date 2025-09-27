@@ -1,6 +1,7 @@
 # Copyright (c) 2025 Julian Müller (ChaoticByte)
 
 import asyncio
+import signal
 
 from hashlib import md5
 
@@ -58,10 +59,13 @@ class Node:
         identifier = addr.identifier()
         self._connections[identifier] = ws
         log("Accepted connection", identifier)
-        async for msg in ws:
-            self._relay(msg)
-        log("Lost connection", identifier)
-        del self._connections[identifier]
+        try:
+            async for msg in ws:
+                self._relay(msg)
+        except:
+            log("Lost connection", identifier)
+        finally:
+            del self._connections[identifier]
 
     async def run(self):
         # connect to receivers
@@ -71,9 +75,17 @@ class Node:
             receiver_tasks.append(t)
         # server loop
         async with serve(self._conn_from_node_or_client, self.listen_address.host, self.listen_address.port) as server:
-            await server.serve_forever()
-        # wait for receivers
-        await asyncio.gather(receiver_tasks)
+            loop = asyncio.get_running_loop()
+
+            def _close():
+                log("Cancelling receiver connections")
+                for r in receiver_tasks:
+                    r.cancel()
+                log("Closing server...")
+                server.close()
+
+            loop.add_signal_handler(signal.SIGTERM, _close)
+            await server.wait_closed()
 
 
 def node_from_yml(yml_data: str) -> Node:
