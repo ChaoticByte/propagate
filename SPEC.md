@@ -124,7 +124,7 @@ verify(
 ### Encryption
 
 > [!NOTE]  
-> Encryption is client-specific and optional.
+> Encryption is implemented by the client and optional.
 
 > [!IMPORTANT]  
 > Only the message body may be encrypted.
