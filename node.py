@@ -8,8 +8,8 @@ import signal
 from argparse import ArgumentParser
 from pathlib import Path
 
-from argh.log import log
-from argh.node import node_from_yml
+from propagate.log import log
+from propagate.node import node_from_yml
 
 
 if __name__ == "__main__":

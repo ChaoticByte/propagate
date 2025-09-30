@@ -1,4 +1,4 @@
-# argh Networking Specification
+# propagate Networking Specification
 
 This document describes how packets are sent through the network of nodes, how packets are structured, etc.
 

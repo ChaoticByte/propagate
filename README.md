@@ -1,4 +1,4 @@
-# argh net
+# propagate
 
 > [!WARNING]  
 > This project is in an **EXPERIMENTAL** stage where things change all the time. Do not use (yet).
