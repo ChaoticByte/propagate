@@ -25,7 +25,7 @@ Implementations **may** support secure websockets, but this is outside of the sc
  Network A
 .~~~~~~~~~~~~~~~~~~~~~.
 (                     )
-(  Client A ——> Node* ————.
+(  Client A ——> Node* ———.
 (               |     )  |
 '~~~~~~~~~~~~~~~|~~~~~'  |
                 |        |
@@ -115,7 +115,7 @@ The msgpack-encoded data is a list (no dictionary!) the following fields:
 |   0 | string | protocol version       | see the beginning of this document for the current protocol version; customized specs should prefix the version with e.g. `example-` |
 |   1 | bytes  | message uuid           | must be a valid [RFC4122](https://datatracker.ietf.org/doc/html/rfc4122.html) UUID (16 bytes, big endian) |
 |   2 | string | author id              | clients & nodes use this field to determine the correct public key to verify the signature |
-|   3 | string | channel id             | default: `main`, clients use this to filter messages; nodes use this for authorization; also, it is used for determining the (optional) per-channel encryption key |
+|   3 | string | channel id             | default: `main`; clients use this to filter messages; nodes use this for authorization; also, it is used for determining the (optional) per-channel encryption key |
 |   4 | bytes  | message body           | |
 |   5 | bool   | msg body utf8-encoded? | must be set to `false` when encryption is used; when possible, implementations should convert the message body to a string after parsing, if this is `true` |
 |   6 | string | encryption scheme      | may be an empty string; see [Encryption](#encryption) |
