@@ -109,7 +109,6 @@ class Packet:
             raise PacketSerializationError("Signature missing!")
         if len(self.signature) != 64:
             raise PacketSerializationError("Signature length invalid")
-        print(type(self._message_body))
         return PREFIX + self.channel_id.to_bytes(4, "big") + packb([
             PROTOCOL_VERSION,
             self._message_uuid.bytes,
@@ -153,7 +152,6 @@ class Packet:
     ) -> 'Packet':
         '''Use this method to create a new Packet with minimal input'''
         if type(message_body) == str:
-            print("aaaaaaaaa")
             message_body = message_body.encode("utf8")
             utf8_encoded = not len(encryption_scheme) > 0
         else:
