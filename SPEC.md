@@ -120,7 +120,7 @@ Clients use this to filter messages. Nodes use this for authorization (in combin
 
 ### Packet Payload
 
-The msgpack-encoded data is a list (no dictionary!) the following fields:
+The msgpack-encoded data is a list with the following fields:
 
 | idx | type   | description            | notes |
 | --- | ------ | ---------------------- | ----- |
