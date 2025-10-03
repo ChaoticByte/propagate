@@ -11,3 +11,14 @@ See [SPEC.md](./SPEC.md) for the specification.
 
 > [!IMPORTANT]  
 > The specification and implementation are not always updated at the same time and may therefore be out of sync.
+
+
+## Requirements
+
+The official implementation in this repo has the following requirements:
+
+- Python >= 3.12
+- The python modules listed in requirements.txt
+
+> [!NOTE]  
+>  This implementation is only tested on Linux hosts.
