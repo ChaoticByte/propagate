@@ -6,7 +6,7 @@
 > [!NOTE]  
 > This protocol version is not yet implemented in the official implementation.
 
-**Protocol version:** `v1-pre2`
+**Protocol version:** `v1-pre3`
 
 This document describes how packets are sent through the network of nodes, how packets are structured, etc.
 
@@ -55,9 +55,9 @@ Implementations **may** support secure websockets, but this is outside of the sc
 
 Client A wants to send a message.
 
-First, the client has to set all the fields for a complete packet - see [Packet Structure](#packet-structure), [Signatures](#signatures) and [Encryption](#encryption).
+First, the client has to set the payload by setting all required fields and encoding the date using MessagePack - see [Packet Payload](#packet-payload), [Signatures](#signatures) and [Encryption](#encryption).
 
-After the client has set all the fields, the packet is created by encoding the fields with [MessagePack](https://msgpack.org/), and prefixing that with the prefix (see [Packets](#packets)).
+The packet is created by concatenating the prefix, the channel id and the payload (see [Packet](#packet)).
 
 The client connects to one or more gateway node(s) via websocket, or uses an existing connection, and sends the packet.
 
@@ -68,11 +68,11 @@ Upon startup, a node connects to all known other nodes. The connection must stay
 
 It also listens for incoming connections on its configured interface and port.
 
-When a node receives a packet, it checks its signature (field `7`). The public key that is used for verification must be determined by the author id (packet field `2`).
+When a node receives a packet, it verifies its signature (field `6`). The public key that is used for verification must be determined by the author id (packet field `2`).
 
 Optional: The node may also check if the author is allowed to send on this channel (field `3`), or the channel itself is allowed.
 
-If the message is okay, the message gets relayed to all open connections.
+If the message is okay, it gets relayed to all open connections.
 
 > [!IMPORTANT]  
 > The node **must** keep track of the last message UUIDs and drop all messages that re-appear.
@@ -86,16 +86,20 @@ On an incoming message, it may
 
 - filter out messages that don't have the correct channel id
 - verify the signature
-- decrypt the body based on the encryption scheme (field `6`)
+- decrypt the body based on the encryption scheme (field `5`)
 
 
-## Packets
+## Packet
 
-A complete packet has a **16-byte** long prefix and [MessagePack](https://msgpack.org/)-encoded data:
+A complete packet has a **16-byte** long prefix, a **4-byte** channel-id and a [MessagePack](https://msgpack.org/)-encoded payload:
 
 ```
-<prefix><data>
+[prefix][channel-id][payload]
 ```
+
+(without the brackets)
+
+### Prefix
 
 Hexadecimal representation of the 16-byte prefix:
 
@@ -106,7 +110,15 @@ Hexadecimal representation of the 16-byte prefix:
 If the message is not correctly prefixed, it must be discarded.
 
 
-### Packet Structure
+### Channel ID
+
+The channel id is a 32bit integer, stored in 4 bytes in big-endian byte order.  
+The default channel is `0`.
+
+Clients use this to filter messages. Nodes use this for authorization (in combination with the author's public key and the signature). It is also used for determining the per-channel encryption key, if the message body is encrypted.
+
+
+### Packet Payload
 
 The msgpack-encoded data is a list (no dictionary!) the following fields:
 
@@ -115,11 +127,10 @@ The msgpack-encoded data is a list (no dictionary!) the following fields:
 |   0 | string | protocol version       | see the beginning of this document for the current protocol version; customized specs should prefix the version with e.g. `example-` |
 |   1 | bytes  | message uuid           | must be a valid [RFC4122](https://datatracker.ietf.org/doc/html/rfc4122.html) UUID (16 bytes, big endian) |
 |   2 | string | author id              | clients & nodes use this field to determine the correct public key to verify the signature |
-|   3 | string | channel id             | default: `main`; clients use this to filter messages; nodes use this for authorization; also, it is used for determining the (optional) per-channel encryption key |
-|   4 | bytes  | message body           | |
-|   5 | bool   | msg body utf8-encoded? | must be set to `false` when encryption is used; when possible, implementations should convert the message body to a string after parsing, if this is `true` |
-|   6 | string | encryption scheme      | may be an empty string; see [Encryption](#encryption) |
-|   7 | bytes  | signature              | see [Signatures](#signatures) (64 bytes) |
+|   3 | bytes  | message body           | |
+|   4 | bool   | msg body utf8-encoded? | must be set to `false` when encryption is used; when possible, implementations should convert the message body to a string after parsing, if this is `true` |
+|   5 | string | encryption scheme      | may be an empty string; see [Encryption](#encryption) |
+|   6 | bytes  | signature              | see [Signatures](#signatures) (64 bytes) |
 
 
 ### Signatures
@@ -168,5 +179,5 @@ If you don't use encryption, set the field to an empty string.
 > Only the message body may be encrypted.
 
 Encryption should be done per-channel.  
-The packet has field `6` with the name of the encryption scheme.
+The packet payload has field `5` with the name of the encryption scheme.
 Use this to tell other clients the encryption you are using (e.g. `salsa20_256`). Other encryption-related (meta-)data like nonces, hmacs, etc. must be written to the message body. Parse it yourself.
