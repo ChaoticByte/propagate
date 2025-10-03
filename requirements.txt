@@ -1,3 +1,4 @@
+msgpack
 pycryptodome
 pyyaml
 websockets
