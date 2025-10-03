@@ -6,7 +6,7 @@
 > [!NOTE]  
 > This protocol version is not yet implemented in the official implementation.
 
-**Protocol version:** `v1-pre3`
+**Protocol version:** `v1-pre4`
 
 This document describes how packets are sent through the network of nodes, how packets are structured, etc.
 
@@ -128,7 +128,7 @@ The msgpack-encoded data is a list with the following fields:
 |   1 | bytes  | message uuid           | must be a valid [RFC4122](https://datatracker.ietf.org/doc/html/rfc4122.html) UUID (16 bytes, big endian) |
 |   2 | string | author id              | clients & nodes use this field to determine the correct public key to verify the signature |
 |   3 | bytes  | message body           | |
-|   4 | bool   | msg body utf8-encoded? | must be set to `false` when encryption is used; when possible, implementations should convert the message body to a string after parsing, if this is `true` |
+|   4 | bool   | msg body utf8-encoded? | gives a hint to clients wether the body can be decoded into a string; must be set to `false` when encryption is used |
 |   5 | string | encryption scheme      | may be an empty string; see [Encryption](#encryption) |
 |   6 | bytes  | signature              | see [Signatures](#signatures) (64 bytes) |
 
