@@ -9,9 +9,10 @@ The goal of this implementation is not to be very efficient or sophisticated, bu
 
 See [SPEC.md](./SPEC.md) for the specification.
 
-> [!IMPORTANT]  
-> The specification and implementation are not always updated at the same time and may therefore be out of sync.
+# Python Implementation
 
+> [!NOTE]  
+> This implementation is not in sync with the current specification
 
 ## Requirements
 

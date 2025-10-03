@@ -2,9 +2,7 @@
 
 > [!IMPORTANT]  
 > This document is a WORK IN PROGRESS
-
-> [!NOTE]  
-> This protocol version is not yet implemented in the official implementation.
+> For implementation progress, see [the README](./README.md)
 
 **Protocol version:** `v1-pre4`
 
