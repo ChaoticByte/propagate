@@ -137,24 +137,23 @@ Pseudo-code for signing and verifying:
 ```
 # sign message
 sign(
-    encode(msg.uuid) + msg.body,
+    msg.uuid + msg.body,
     private_key(msg.author_id)
 )
 # -> 64byte signature
 
 # verify message
 verify(
-    encode(msg.uuid) + msg.body,
+    msg.uuid + msg.body,
     public_key(msg.author_id)
 )
 # -> bool/error code/...
 ```
 
-| pseudo-code     | description          |
-| --------------- | -------------------- |
-| `encode()`      | **UTF8**-encoding        |
-| `sign()`        | **Ed25519** sign         |
-| `verify()`      | **Ed25519** verify       |
+| pseudo-code     | description        |
+| --------------- | ------------------ |
+| `sign()`        | **Ed25519** sign   |
+| `verify()`      | **Ed25519** verify |
 | `private_key()` | load author's **Ed25519** private key |
 | `public_key()`  | load author's **Ed25519** public key  |
 
