@@ -119,7 +119,7 @@ The msgpack-encoded data is a list (no dictionary!) the following fields:
 |   4 | bytes  | message body           | |
 |   5 | bool   | msg body utf8-encoded? | must be set to `false` when encryption is used; when possible, implementations should convert the message body to a string after parsing, if this is `true` |
 |   6 | string | encryption scheme      | may be an empty string; see [Encryption](#encryption) |
-|   7 | bytes  | signature              | see [Signatures](#signatures) |
+|   7 | bytes  | signature              | see [Signatures](#signatures) (64 bytes) |
 
 
 ### Signatures
